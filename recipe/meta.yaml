@@ -1,20 +1,20 @@
 {% set provider = "NS1" %}
 {% set goname = "github.com/terraform-providers/terraform-provider-"+provider.lower() %}
-{% set version = "1.7.0" %}
+{% set version = "1.8.0" %}
 
 {% set name = goname.split('/')[-1] %}
 {% set pkg_src = ('src/'+goname).replace("/",os.sep) %}
 
 {% set x4_plugin = name + '_v' + version + "_x4" + (".exe" if win else "")%}
 
-{% set sha256 = "458bba394c1ab18ae7745532afe4eefc683ebfc7b0198fe29f3737c2d88a3f33" %}
+{% set sha256 = "bddc6cbc978e83a4bf32ed2a813832aa357b8c55d8029957288b166e5d09d78d" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  - folder:  {{ pkg_src }}
+  - folder: {{ pkg_src }}
     url: https://{{ goname }}/archive/v{{ version }}.tar.gz
     sha256: {{ sha256 }}
 
@@ -34,13 +34,13 @@ requirements:
     - terraform >=0.11.11  # [win]
 
 test:
-  requires:         # [win]
+  requires:   # [win]
     - m2-bash       # [win]
     - m2-coreutils  # [win]
 
   commands:
     - bash -euf -c "echo 'provider \"{{ provider|lower }}\" { version=\"{{ version }}\" }' > init.tf"
- 
+
     - terraform init
     # Tests that no plugins were downloaded
     - test -f .terraform/plugins/{{ goos }}_{{ goarch }}/lock.json
